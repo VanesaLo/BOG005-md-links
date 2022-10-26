@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/VanesaLo/BOG005-md-links#readme",
   "dependencies": {
-    "chalk": "^4.1.2"
+    "chalk": "^4.1.2",
+    "marked": "^4.1.1"
   }
 }
