@@ -13,8 +13,8 @@
     "test": "npm test"
   },
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/VanesaLo/BOG005-md-links.git"
+    "type": "github",
+    "url": "https://github.com/VanesaLo/BOG005-md-links"
   },
   "author": "Vanesa Lopez",
   "license": "ISC",
