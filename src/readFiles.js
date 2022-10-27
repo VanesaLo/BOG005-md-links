@@ -1,16 +1,23 @@
 const fs = require("fs");
 const marked = require("marked");
+const fetch = require("node-fetch");
 const util = require("util");
+const routes = [
+  "proof-docs/file.md",
+  "proof-docs/may.md",
+  "proof-docs/readme.md",
+  "proof-docs/PRUEBA2.md",
+];
 
-function getLinks(data = []) {
+function getLinks(data) {
   let currentResult = [];
   data.forEach((item, index) => {
     if (item.type === "link" && item.href.startsWith("http")) {
       currentResult.push({
-         href: item.href, 
-         text: item.text,
-         file: routes[index] 
-        });
+        href: item.href,
+        text: item.text,
+        file: routes[index],
+      });
     } else if (Array.isArray(item.tokens) || Array.isArray(item.items)) {
       const items = item.tokens || item.items;
       const childrenResults = getLinks(items);
@@ -52,13 +59,6 @@ function getLinks2(routes) {
   });
 }
 
-const routes = [
-  "proof-docs/file.md",
-  "proof-docs/may.md",
-  "proof-docs/readme.md",
-  "proof-docs/PRUEBA2.md",
-];
-
 getLinks2(routes).then((allLinks) => {
   // console.log(allLinks);
 
@@ -66,3 +66,5 @@ getLinks2(routes).then((allLinks) => {
     util.inspect(allLinks, { showHidden: false, depth: null, colors: true })
   );
 });
+
+

@@ -5,7 +5,16 @@ const route = process.cwd();
 const { pathAbsolute, getFilesMd, infoLinks} = require("./functions.js");
 
 //console.log(chalk.blue(path));
+function existsFile(route) {
+  return fs.existsSync(route);
+}
+console.log(existsFile(route))
 
+if (fs.existsSync(path) === true) {
+      (console.log(chalk.magenta(path)));
+    } else {
+      (new Error("the path doesn't exists"));
+    }
 
 
 const mdLinks = (path, options) => {
@@ -22,5 +31,6 @@ mdLinks(route).then((data)=>{
 
 
 module.exports = () => {
-  // ...
+  existsFile,
+  mdLinks
 };

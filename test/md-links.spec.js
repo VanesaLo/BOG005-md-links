@@ -1,10 +1,10 @@
-const mdLinks = require('../');
+const {existsFile} = require('../src/index');
 
 
-describe('mdLinks', () => {
+describe('exists file', () => {
 
-  it('should...', () => {
-    console.log('FIX ME!');
+  it('should be a function', () => {
+    expect(typeof existsFile).toBe('function');
   });
 
 });
