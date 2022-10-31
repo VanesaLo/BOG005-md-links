@@ -2,8 +2,10 @@ const fs = require("fs");
 const path = require("path");
 const chalk = require("chalk");
 const marked = require("marked");
+const fetch = require("node-fetch");
 const util = require("util");
 const route = "proof-docs";
+const routeFile = "proof-docs\PRUEBA2.md";
 
 function pathAbsolute(newPath) {
   let pathChange = "";
@@ -14,7 +16,7 @@ function pathAbsolute(newPath) {
   }
   return pathChange;
 }
-console.log(chalk.magenta(pathAbsolute(route)));
+// console.log(chalk.magenta(pathAbsolute(route)));
 
 function getFilesMD(filesMd) {
   const file = fs.statSync(filesMd).isFile();
@@ -41,7 +43,7 @@ function getFilesMD(filesMd) {
   }
   return arrayFiles;
 }
-console.log(getFilesMD(route));
+// console.log(getFilesMD(route));
 
 // Leer un archivo .md y extraer los links
 
@@ -50,7 +52,7 @@ function infoLink(files) {
     fs.readFile(files, "utf-8", (err, data) => {
       if (err) reject(err);
 
-      const result = marked.lexer(data);
+      const result = marked.marked(data);
       const resultDos = getLinks(result);
       resolve(resultDos);
     });
@@ -58,14 +60,14 @@ function infoLink(files) {
 }
 
 
-function getLinks(data) {
+ function getLinks(files) {
   let currentResult = [];
-  data.forEach((item) => {
+  files.forEach((item) => {
     if (item.type === "link" && item.href.startsWith("http")) {
       currentResult.push({
         href: item.href,
         text: item.text,
-        file: pathAbsolute(route),
+        file: route,
       });
     } else if (Array.isArray(item.tokens) || Array.isArray(item.items)) {
       const items = item.tokens || item.items;
@@ -73,9 +75,9 @@ function getLinks(data) {
       currentResult = currentResult.concat(childrenResults);
     }
   });
-  return currentResult;
+  return currentResult.flat();
 }
-
+ 
 
 
 function getLinks2(getFilesMD) {
@@ -98,8 +100,25 @@ getLinks2(getFilesMD).then((results) => {
   );
 });
 
+function validateHTTP(filePathMD) {
+  // console.log(filePathMD + "estoy en validate" );
+  const requestHTTP = filePathMD.map((item) => {
+     return fetch(item.href).then((answer) => {
+          item.status = answer.status;
+          item.txt = answer.status <= 399 ? 'Ok' : 'Fail';
+          //console.log('soy link', link)
+          return (item);
+
+      })
+  })
+  return Promise.all(requestHTTP)
+}
+
+
+
 module.exports = {
   pathAbsolute,
   getFilesMD,
-  getLinks2,
+  //getLinks,
+  validateHTTP
 };

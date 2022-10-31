@@ -1,10 +1,10 @@
-const {existsFile} = require('../src/index');
+const {existsFile, mdLinks} = require('../src/index');
 
 
-describe('exists file', () => {
+describe('existsFile', () => {
 
   it('should be a function', () => {
-    expect(typeof existsFile).toBe('function');
+    expect(typeof existsFile).toEqual('function');
   });
 
 });
