@@ -3,8 +3,8 @@ const path = require("path");
 const chalk = require("chalk");
 const marked = require("marked");
 const fetch = require("node-fetch");
-const route = "proof-docs";
-const routeFile = "proof-docsPRUEBA2.md";
+// const route = "proof-docs";
+// const routeFile = "proof-docsPRUEBA2.md";
 
 function pathAbsolute(newPath) {
   let pathChange = "";
@@ -17,7 +17,7 @@ function pathAbsolute(newPath) {
 }
 // console.log(chalk.magenta(pathAbsolute(route)));
 
-function getFilesMD(filesMd) {
+function getFiles(filesMd) {
   const isFile = fs.statSync(filesMd).isFile();
   const isDirectory = fs.statSync(filesMd).isDirectory();
   const extension = path.extname(filesMd);
@@ -29,22 +29,22 @@ function getFilesMD(filesMd) {
   } else if (isDirectory) {
     fs.readdirSync(filesMd).forEach((file) => {
       let pathDirectory = path.join(filesMd, file);
-      arrayFiles = arrayFiles.concat(getFilesMD(pathDirectory));
+      arrayFiles = arrayFiles.concat(getFiles(pathDirectory));
     });
   }
   return arrayFiles;
 }
- //console.log(getFilesMD(route));
+//console.log(getFiles(route));
 
 function infoLink(pathFile) {
   return new Promise((resolve, reject) => {
     fs.readFile(pathFile, "utf-8", (err, data) => {
       if (err) reject(err);
-     
+
       const markedLexer = marked.lexer(data);
       const result = getLinks(markedLexer);
 
-      result.forEach((item) => item.file = pathFile)
+      result.forEach((item) => (item.file = pathFile));
 
       resolve(result);
     });
@@ -72,7 +72,7 @@ function getLinks2(routes) {
   return new Promise((resolve) => {
     const promises = [];
 
-   routes.forEach((route) => {
+    routes.forEach((route) => {
       promises.push(infoLink(route));
     });
 
@@ -80,16 +80,14 @@ function getLinks2(routes) {
       let allLinks = [];
       resultsPromises.forEach((resultPromise) => {
         allLinks = allLinks.concat(resultPromise);
-      })
+      });
       resolve(allLinks);
     });
   });
 }
 
-
-
-function validateHTTP(filePathMD) {
-  const requestHTTP = filePathMD.map((item) => {
+function validateHTTP(filePath) {
+  const requestHTTP = filePath.map((item) => {
     return fetch(item.href).then((answer) => {
       item.status = answer.status;
       item.txt = answer.status <= 399 ? "Ok" : "Fail";
@@ -99,10 +97,26 @@ function validateHTTP(filePathMD) {
   return Promise.all(requestHTTP);
 }
 
+const statsFiles = (filePath) => {
+  return {
+    total: filePath.length,
+    Unique: new Set(filePath.map((linkObj) => linkObj.href)).size,
+  };
+};
+
+const statsAndValidateFiles = (filePath) => {
+  return {
+    Total: filePath.length,
+    Unique: new Set(filePath.map((linkObj) => linkObj.href)).size,
+    Broken: broken,
+  };
+};
 
 module.exports = {
   pathAbsolute,
-  getFilesMD,
+  getFiles,
   getLinks2,
   validateHTTP,
-}; 
+  statsFiles,
+  statsAndValidateFiles,
+};

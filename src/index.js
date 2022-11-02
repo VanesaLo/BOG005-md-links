@@ -3,9 +3,9 @@ const fs = require("fs");
 const path = require("path");
 const fetch = require("node-fetch");
 const route = "proof-docs";
-const routeFile = "proof-docs\PRUEBA2.md";
+// const routeFile = "proof-docsPRUEBA2.md";
 
-const { pathAbsolute, getFilesMD, getLinks2, validateHTTP} = require("./functions.js");
+const { pathAbsolute, getFiles, getLinks2, validateHTTP} = require("./functions.js");
 
 // //console.log(chalk.blue(path));
 // function existsFile(route) {
@@ -17,27 +17,23 @@ const { pathAbsolute, getFilesMD, getLinks2, validateHTTP} = require("./function
 //   return fs.existsSync(route);
 // }
 
-const mdLinks = (path, options = { validate: false}) => {
+const mdLinks = (path, options = { validate: true }) => {
   return new Promise((resolve, reject) => {
     const absolutePath = pathAbsolute(path);
-    const files = getFilesMD(absolutePath);
-    
-    getLinks2(files).then((links) =>{
-      if(options.validate === false) {
-        resolve(links)
+    const files = getFiles(absolutePath);
+
+    getLinks2(files).then((links) => {
+      if (options.validate === false) {
+        resolve(links);
         return;
       }
-      validateHTTP(links).then((res) =>{
-        resolve(res)
-      })
-    })
-  })
-}
-mdLinks(route).then((data)=>{
-  console.log(data);
-}),
+      validateHTTP(links).then((res) => {
+        resolve(res);
+      });
+    });
+  });
+};
 
-
-module.exports = () => {
+module.exports = {
   mdLinks
 };
