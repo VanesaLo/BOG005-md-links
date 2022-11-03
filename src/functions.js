@@ -3,7 +3,7 @@ const path = require("path");
 const chalk = require("chalk");
 const marked = require("marked");
 const fetch = require("node-fetch");
-// const route = "proof-docs";
+const route = "proof-docs";
 // const routeFile = "proof-docsPRUEBA2.md";
 
 function pathAbsolute(newPath) {
@@ -35,6 +35,7 @@ function getFiles(filesMd) {
   return arrayFiles;
 }
 //console.log(getFiles(route));
+const arrayFiles = getFiles(route);
 
 function infoLink(pathFile) {
   return new Promise((resolve, reject) => {
@@ -88,29 +89,37 @@ function getLinks2(routes) {
 
 function validateHTTP(filePath) {
   const requestHTTP = filePath.map((item) => {
-    return fetch(item.href).then((answer) => {
-      item.status = answer.status;
-      item.txt = answer.status <= 399 ? "Ok" : "Fail";
-      return item;
-    });
+    return fetch(item.href)
+      .then((answer) => {
+        item.status = answer.status;
+        item.txt = answer.status <= 399 ? "Ok" : "Fail";
+        return item;
+      })
+      .catch(() => {
+        item.status = "the server not response";
+        item.txt = "Fail";
+        return item;
+      });
   });
   return Promise.all(requestHTTP);
 }
 
 const statsFiles = (filePath) => {
   return {
-    total: filePath.length,
+    Total: filePath.length,
     Unique: new Set(filePath.map((linkObj) => linkObj.href)).size,
   };
 };
 
 const statsAndValidateFiles = (filePath) => {
+  const broken = filePath.filter((item) => item.txt === "Fail").length;
   return {
     Total: filePath.length,
     Unique: new Set(filePath.map((linkObj) => linkObj.href)).size,
     Broken: broken,
   };
 };
+// console.log("soy array", statsAndValidateFiles(arrayFiles));
 
 module.exports = {
   pathAbsolute,
