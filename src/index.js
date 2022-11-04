@@ -1,31 +1,31 @@
-const chalk = require("chalk");
 const fs = require("fs");
 const path = require("path");
-const route = process.cwd();
-const { pathAbsolute, getFilesMd} = require("./getFiles");
+const fetch = require("node-fetch");
 
-//console.log(chalk.blue(path));
+const {
+  pathAbsolute,
+  getFiles,
+  getLinks2,
+  validateHTTP,
+} = require("./functions.js");
 
-// function existsFile(route) {
-//   return fs.existsSync(route);
-// }
-// console.log(existsFile(route))
-
-const mdLinks = (path, options) => {
+const mdLinks = (path, options = { validate: true }) => {
   return new Promise((resolve, reject) => {
     const absolutePath = pathAbsolute(path);
-    const files = getFilesMd(path);
-    // if (fs.existsSync(path) === true) {
-    //   resolve(console.log(chalk.magenta(path)));
-    // } else {
-    //   reject(new Error("the path doesn't exists"));
-    // }
-  })
-}
-mdLinks(route);
+    const files = getFiles(absolutePath);
 
+    getLinks2(files).then((links) => {
+      if (options.validate === false) {
+        resolve(links);
+        return;
+      }
+      validateHTTP(links).then((res) => {
+        resolve(res);
+      });
+    });
+  });
+};
 
-
-module.exports = () => {
-  // ...
+module.exports = {
+  mdLinks,
 };
