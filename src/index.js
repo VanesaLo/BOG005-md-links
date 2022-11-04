@@ -1,9 +1,6 @@
-const chalk = require("chalk");
 const fs = require("fs");
 const path = require("path");
 const fetch = require("node-fetch");
-// const route = "proof-docs";
-// const routeFile = "proof-docsPRUEBA2.md";
 
 const {
   pathAbsolute,
@@ -28,10 +25,6 @@ const mdLinks = (path, options = { validate: true }) => {
     });
   });
 };
-
-// mdLinks(route).then((data)=>{
-//   console.log(data);
-// }),
 
 module.exports = {
   mdLinks,

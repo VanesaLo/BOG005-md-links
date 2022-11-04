@@ -1,10 +1,7 @@
 const fs = require("fs");
 const path = require("path");
-const chalk = require("chalk");
 const marked = require("marked");
 const fetch = require("node-fetch");
-const route = "proof-docs";
-// const routeFile = "proof-docsPRUEBA2.md";
 
 function pathAbsolute(newPath) {
   let pathChange = "";
@@ -15,7 +12,6 @@ function pathAbsolute(newPath) {
   }
   return pathChange;
 }
-// console.log(chalk.magenta(pathAbsolute(route)));
 
 function getFiles(filesMd) {
   const isFile = fs.statSync(filesMd).isFile();
@@ -34,8 +30,6 @@ function getFiles(filesMd) {
   }
   return arrayFiles;
 }
-//console.log(getFiles(route));
-const arrayFiles = getFiles(route);
 
 function infoLink(pathFile) {
   return new Promise((resolve, reject) => {
@@ -119,7 +113,6 @@ const statsAndValidateFiles = (filePath) => {
     Broken: broken,
   };
 };
-// console.log("soy array", statsAndValidateFiles(arrayFiles));
 
 module.exports = {
   pathAbsolute,
