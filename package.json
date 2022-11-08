@@ -1,5 +1,5 @@
 {
-  "name": "vanesa-project-md-links",
+  "name": "vanesa-md-links",
   "version": "0.1.0",
   "engines": {
     "node": ">=12.x"
@@ -18,6 +18,9 @@
   },
   "author": "Vanesa Lopez",
   "license": "ISC",
+  "bin":{
+    "md-links": "./src/cli.js"
+  },
   "bugs": {
     "url": "https://github.com/VanesaLo/BOG005-md-links/issues"
   },
