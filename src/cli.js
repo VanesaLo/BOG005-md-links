@@ -16,7 +16,7 @@ const cli = (pathArg, argv) => {
         console.log(statsAndValidateFiles(res));
       })
       .catch((reject) => {
-        console.log(chalk.aliceblue("The route is invalid", reject));
+        console.log(chalk.green("The route is invalid", reject));
       });
   } else if (argv.includes("--validate")) {
     mdLinks(pathArg, { validate: true })
@@ -43,7 +43,7 @@ const cli = (pathArg, argv) => {
       })
       .catch((reject) => {
         console.log(
-          chalk.aquamarine("The file or directoy does not exist", reject)
+          chalk.magenta("The file or directoy does not exist", reject)
         );
       });
   } else if (
